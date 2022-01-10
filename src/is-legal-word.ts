@@ -1,8 +1,5 @@
-import { legalWordsRawString } from "./legal-word-raw-string";
 
-const legalWords = legalWordsRawString.split("\n");
-
-export function isLegalWord(word: string) : boolean {
+export function isLegalWord(word: string, legalWords: string[]) {
     const revisedWord = word.trim().toLocaleLowerCase();
 
     // KLUDGE: For reasons I don't understand legalWords.includes("")

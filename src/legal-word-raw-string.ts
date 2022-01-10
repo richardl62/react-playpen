@@ -1,3 +1,4 @@
+console.log("Hello from legal-word-raw-string.ts");
 // wordList downloaded from https://www.wordgamedictionary.com/sowpods/download/
 export const legalWordsRawString = `aa
 aah
