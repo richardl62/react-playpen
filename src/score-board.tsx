@@ -26,7 +26,8 @@ const Hole = styled.div<{pos: Position}>`
 `
 
 export function ScoreBoard() {
-    const holes = pegPoints.map((pos, index) => <Hole key={index} pos={pos}/>);
+    const allPoints = [...pegPoints.player1, ...pegPoints.player2];
+    const holes = allPoints.map((pos, index) => <Hole key={index} pos={pos}/>);
 
     return <Board>{holes}</Board>;
 }
