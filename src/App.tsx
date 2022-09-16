@@ -1,9 +1,10 @@
 import React from 'react';
-import { WordChecker } from './word-check';
+import { ScoreBoard } from './score-board';
 
 
 function App() {
-  return <WordChecker />
+
+  return <ScoreBoard />
 }
 
 export default App;
