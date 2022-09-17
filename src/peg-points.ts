@@ -20,15 +20,17 @@ function makePegPoints(params : {
 
     const points: Position[] = [];
 
-    const addPoint = (pos: Position) =>
+    // In general lastPoint will be the last point in points. But it can also be the
+    // nomimal end point of an arc.
+    let lastPoint: Position;
+
+    const addPoint = (pos: Position) => {
         points.push(pos);
-    
-    const lastPoint = () => { 
-        return points.slice(-1)[0];
+        lastPoint = pos;
     }
 
     const addOffsetPoint = (offset: number) => {
-        let {bottom, left} = lastPoint()
+        let {bottom, left} = lastPoint;
         addPoint({bottom: bottom + offset, left})
     }
 
@@ -67,29 +69,33 @@ function makePegPoints(params : {
     };
 
     const addTopArc = () => {
-        const last = lastPoint();
         const radius = topArcRadius;
-
-        let center = {
-            bottom: last.bottom + rowGap.fifthRow,
-            left: last.left + radius,
+        
+        const center = {
+            bottom: lastPoint.bottom + rowGap.fifthRow,
+            left: lastPoint.left + radius,
         };
 
 
-        addSimpleArc(center, radius, {startAngle:0, endAngle:75, steps: 5});
-        addSimpleArc(center, radius, {startAngle:105, endAngle:180, steps:5});       
+        addSimpleArc(center, radius, {startAngle:10, endAngle:75, steps: 5});
+        addSimpleArc(center, radius, {startAngle:105, endAngle:170, steps:5}); 
+        
+        // Set the nominal end point of the arc.
+        lastPoint = {bottom: center.bottom, left: center.left + radius}
     };
 
     const addBottomArc = () => {
-        const last = lastPoint();
         const radius = bottomArcRadius;
 
-        let center = {
-            bottom: last.bottom - rowGap.fifthRow,
-            left: last.left - radius,
+        const center = {
+            bottom: lastPoint.bottom - rowGap.fifthRow,
+            left: lastPoint.left - radius,
         };
 
-        addSimpleArc(center, radius, {startAngle:180, endAngle:360, steps: 5});      
+        addSimpleArc(center, radius, {startAngle:195, endAngle:345, steps: 5}); 
+        
+        // Set the nominal end point of the arc.
+        lastPoint = {bottom: center.bottom, left: center.left - radius}
     };
 
     // Starting peg points
