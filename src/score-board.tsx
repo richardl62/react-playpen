@@ -12,31 +12,32 @@ const Board = styled.div<{height: number, width: number}>`
     margin: 10px;
 `;
 
+interface ContainerProps {
+    pos: Position;
+ };
+
+/*
+Originally, Hole did not use attribs, and instead bottom and left were defined
+along with the ohter properies (position, etc). But doing it that way lead to
+a warnings like
+    Over 200 classes were generated for component styled.div with the id of "sc-crXcEl".
+    Consider using the attrs method ...
+*/
 const Container = styled.div.attrs<
-    { size: number }, // What is consumed by .attrs()
-    { width: number, height: number } // What comes out of .attrs()
+    ContainerProps, // What is consumed by .attrs()
+    {style: {bottom: string, left: string }} // What comes out of .attrs()
 >((props) => {
-    return {
-        width: props.size,
-        height: props.size,
-    }
-})<{ size: number }> // The outer type
-`
-    width: ${props => props.width}px;
-    height: ${props => props.width}px;
-`
-
-const Hole = styled.div<{pos: Position}>`
-
+    return {style: {
+        bottom: props.pos.bottom + "px",
+        left: props.pos.left + "px",
+    }}
+})<ContainerProps>`
     height: ${radius}px;
     width: ${radius}px;
     border-radius: 50%;
 
-    position: absolute; 
-    bottom: ${props => props.pos.bottom}px;
-    left:${props => props.pos.left}px;
-
-    background: black;
+    position: absolute;
+    background: black
 `
 
 export function ScoreBoard() {
@@ -46,7 +47,7 @@ export function ScoreBoard() {
         bottom -= boundingBox.minBottom;
         left -= boundingBox.minLeft;
 
-        return <Hole key={index} pos={{bottom, left}}/>
+        return <Container key={index} pos={{bottom, left}}/>
     });
 
     const height = (boundingBox.maxBottom - boundingBox.minBottom) + radius;
