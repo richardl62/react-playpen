@@ -1,4 +1,4 @@
-import { rowGap, columnGap, radius } from "./sizes";
+import { rowGap, columnGap, radius, innerArcRadiusBottom, innerArcRadiusTop } from "./sizes";
 
 export interface Position {
     bottom: number;
@@ -157,14 +157,14 @@ function offsetPoints(points: Position[], offset: Position) {
 const rawPegPoints: PegPoints = {
     player1: makeRawPegPoints({
         start: {bottom:0, left:0},
-        topArcRadius: columnGap * 5,
-        bottomArcRadius: columnGap * 3,
+        topArcRadius: innerArcRadiusTop + columnGap,
+        bottomArcRadius: innerArcRadiusBottom + columnGap,
     }),
 
     player2: makeRawPegPoints({
         start: {bottom:0, left: columnGap},
-        topArcRadius: columnGap * 4,
-        bottomArcRadius: columnGap * 2,
+        topArcRadius: innerArcRadiusTop,
+        bottomArcRadius: innerArcRadiusBottom,
     }),
 };
 
