@@ -9,4 +9,4 @@ export const rowGap = {
     fifthRow: radius * 2,
 };
 
-export const boardPadding = 0;
+export const boardPadding = 10;

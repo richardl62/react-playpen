@@ -1,15 +1,24 @@
 import styled from "styled-components";
 import { pegPoints, boardHeight, boardWidth } from "./peg-points";
-import { radius } from "./sizes";
+import { boardPadding, radius } from "./sizes";
 
-const Board = styled.div<{height: number, width: number}>`
+const BoardBoarder = styled.div`
+    display: inline-flex;
+    /* background: cornsilk; */
+    /* border: 2px solid black; */
+`;
+
+const InnerBoard = styled.div<{height: number, width: number}>`
     position: relative;
 
     height: ${props => props.height}px;
     width: ${props => props.width}px;
-    border: 1px solid black;
 
-    background: cornsilk;
+
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background: brown;
+    border: ${boardPadding}px solid brown;
 `;
 
 interface HoleProps {
@@ -40,7 +49,7 @@ HoleProps, // What is consumed by .attrs()
     position: absolute;
     box-sizing: border-box;
     border: solid 2px black;
-    background: brown;
+    background: cornsilk;
 `
 
 export function ScoreBoard() {
@@ -50,5 +59,7 @@ export function ScoreBoard() {
         return <Hole key={index} bottom={pos.bottom} left={pos.left}/>
     });
 
-    return <Board height={boardHeight} width={boardWidth}>{holes}</Board>;
+    return <BoardBoarder>
+        <InnerBoard height={boardHeight} width={boardWidth}>{holes}</InnerBoard>
+    </BoardBoarder>;
 }
