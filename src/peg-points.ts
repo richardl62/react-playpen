@@ -1,4 +1,4 @@
-import { rowGap, columnGap, radius, innerArcRadiusBottom, innerArcRadiusTop } from "./sizes";
+import { rowGap, columnGap, holeRadius, innerArcRadiusBottom, innerArcRadiusTop } from "./sizes";
 
 export interface Position {
     bottom: number;
@@ -172,8 +172,8 @@ const rawBoundingBox = makeBoundingBox(
     [...rawPegPoints.player1, ...rawPegPoints.player2]
 );
 
-export const boardWidth = (rawBoundingBox.maxLeft - rawBoundingBox.minLeft) + radius;
-export const boardHeight = (rawBoundingBox.maxBottom - rawBoundingBox.minBottom) + radius;
+export const boardWidth = (rawBoundingBox.maxLeft - rawBoundingBox.minLeft) + holeRadius;
+export const boardHeight = (rawBoundingBox.maxBottom - rawBoundingBox.minBottom) + holeRadius;
 
 const offset = {
     bottom: -rawBoundingBox.minBottom,

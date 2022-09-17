@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { pegPoints, boardHeight, boardWidth } from "./peg-points";
-import { boardPadding, radius } from "./sizes";
+import { boardPadding, holeRadius } from "./sizes";
 
 const BoardBoarder = styled.div`
     display: inline-flex;
@@ -42,8 +42,8 @@ HoleProps, // What is consumed by .attrs()
         left: props.left,
     }}
 })<HoleProps>`
-    height: ${radius}px;
-    width: ${radius}px;
+    height: ${holeRadius}px;
+    width: ${holeRadius}px;
     border-radius: 50%;
 
     position: absolute;
