@@ -12,6 +12,20 @@ const Board = styled.div<{height: number, width: number}>`
     margin: 10px;
 `;
 
+const Container = styled.div.attrs<
+    { size: number }, // What is consumed by .attrs()
+    { width: number, height: number } // What comes out of .attrs()
+>((props) => {
+    return {
+        width: props.size,
+        height: props.size,
+    }
+})<{ size: number }> // The outer type
+`
+    width: ${props => props.width}px;
+    height: ${props => props.width}px;
+`
+
 const Hole = styled.div<{pos: Position}>`
 
     height: ${radius}px;
