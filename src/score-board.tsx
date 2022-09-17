@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { boundingBox, pegPoints, Position } from "./peg-points";
+import { boundingBox, pegPoints } from "./peg-points";
 import { radius } from "./sizes";
 
 const Board = styled.div<{height: number, width: number}>`
@@ -9,11 +9,12 @@ const Board = styled.div<{height: number, width: number}>`
     width: ${props => props.width}px;
     border: 1px solid black;
 
-    margin: 10px;
+    background: cornsilk;
 `;
 
-interface ContainerProps {
-    pos: Position;
+interface HoleProps {
+    left: number;
+    bottom: number;
  };
 
 /*
@@ -23,21 +24,23 @@ a warnings like
     Over 200 classes were generated for component styled.div with the id of "sc-crXcEl".
     Consider using the attrs method ...
 */
-const Container = styled.div.attrs<
-    ContainerProps, // What is consumed by .attrs()
-    {style: {bottom: string, left: string }} // What comes out of .attrs()
+const Hole = styled.div.attrs<
+HoleProps, // What is consumed by .attrs()
+    {style: any} // What comes out of .attrs(). Use of 'any' is a kludge. 
 >((props) => {
     return {style: {
-        bottom: props.pos.bottom + "px",
-        left: props.pos.left + "px",
+        bottom: props.bottom,
+        left: props.left,
     }}
-})<ContainerProps>`
+})<HoleProps>`
     height: ${radius}px;
     width: ${radius}px;
     border-radius: 50%;
 
     position: absolute;
-    background: black
+    box-sizing: border-box;
+    border: solid 2px black;
+    background: brown;
 `
 
 export function ScoreBoard() {
@@ -47,7 +50,7 @@ export function ScoreBoard() {
         bottom -= boundingBox.minBottom;
         left -= boundingBox.minLeft;
 
-        return <Container key={index} pos={{bottom, left}}/>
+        return <Hole key={index} bottom={bottom} left={left}/>
     });
 
     const height = (boundingBox.maxBottom - boundingBox.minBottom) + radius;
