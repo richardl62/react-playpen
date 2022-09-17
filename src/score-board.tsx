@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { pegPoints, Position } from "./peg-points";
-import { height, width, radius } from "./sizes";
+import { boundingBox, pegPoints, Position } from "./peg-points";
+import { radius } from "./sizes";
 
-const Board = styled.div`
+const Board = styled.div<{height: number, width: number}>`
     position: relative;
 
-    height: ${height}px;
-    width: ${width}px;
+    height: ${props => props.height}px;
+    width: ${props => props.width}px;
     border: 1px solid black;
 
     margin: 10px;
@@ -27,7 +27,16 @@ const Hole = styled.div<{pos: Position}>`
 
 export function ScoreBoard() {
     const allPoints = [...pegPoints.player1, ...pegPoints.player2];
-    const holes = allPoints.map((pos, index) => <Hole key={index} pos={pos}/>);
+    const holes = allPoints.map((pos, index) => {
+        let {bottom, left} = pos;
+        bottom -= boundingBox.minBottom;
+        left -= boundingBox.minLeft;
 
-    return <Board>{holes}</Board>;
+        return <Hole key={index} pos={{bottom, left}}/>
+    });
+
+    const height = (boundingBox.maxBottom - boundingBox.minBottom) + radius;
+    const width = (boundingBox.maxLeft - boundingBox.minLeft) + radius;
+
+    return <Board height={height} width={width}>{holes}</Board>;
 }

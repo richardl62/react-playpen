@@ -9,7 +9,6 @@ interface PegPoints {
     player1: Position[];
     player2: Position[];
 }
-//type Player = "player1" | "player2";
 
 function makePegPoints(params : {
         start: Position, 
@@ -137,3 +136,32 @@ export const pegPoints: PegPoints = {
     }),
 };
 
+interface BoundingBox {
+    minBottom: number;
+    maxBottom: number;
+
+    minLeft: number;
+    maxLeft: number;
+};
+
+function makeBoundingBox() {
+    const allPoints = [...pegPoints.player1, ...pegPoints.player2];
+    
+    let minBottom = allPoints[0].bottom;
+    let maxBottom = minBottom;
+
+    let minLeft = allPoints[0].left;
+    let maxLeft = minLeft;
+
+    for(const pos of allPoints) {
+        minBottom = Math.min(minBottom, pos.bottom);
+        maxBottom = Math.max(maxBottom, pos.bottom);
+
+        minLeft = Math.min(minLeft, pos.left);
+        maxLeft = Math.max(maxLeft, pos.left);
+    }
+
+    return {minBottom, maxBottom, minLeft, maxLeft};
+}
+
+export const boundingBox : BoundingBox = makeBoundingBox();
