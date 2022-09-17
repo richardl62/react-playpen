@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { boundingBox, pegPoints } from "./peg-points";
+import { pegPoints, boardHeight, boardWidth } from "./peg-points";
 import { radius } from "./sizes";
 
 const Board = styled.div<{height: number, width: number}>`
@@ -45,16 +45,10 @@ HoleProps, // What is consumed by .attrs()
 
 export function ScoreBoard() {
     const allPoints = [...pegPoints.player1, ...pegPoints.player2];
-    const holes = allPoints.map((pos, index) => {
-        let {bottom, left} = pos;
-        bottom -= boundingBox.minBottom;
-        left -= boundingBox.minLeft;
 
-        return <Hole key={index} bottom={bottom} left={left}/>
+    const holes = allPoints.map((pos, index) => {
+        return <Hole key={index} bottom={pos.bottom} left={pos.left}/>
     });
 
-    const height = (boundingBox.maxBottom - boundingBox.minBottom) + radius;
-    const width = (boundingBox.maxLeft - boundingBox.minLeft) + radius;
-
-    return <Board height={height} width={width}>{holes}</Board>;
+    return <Board height={boardHeight} width={boardWidth}>{holes}</Board>;
 }

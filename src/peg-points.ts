@@ -1,4 +1,4 @@
-import { rowGap, columnGap } from "./sizes";
+import { rowGap, columnGap, radius } from "./sizes";
 
 export interface Position {
     bottom: number;
@@ -10,7 +10,9 @@ interface PegPoints {
     player2: Position[];
 }
 
-function makePegPoints(params : {
+// Make 'raw' peg points for one player.
+// 'raw' points are later adjusted to fit in a box with bottom left corner at (0,0)
+function makeRawPegPoints(params : {
         start: Position, 
         topArcRadius: number,
         bottomArcRadius: number,
@@ -122,38 +124,16 @@ function makePegPoints(params : {
     return points;
 }
 
-export const pegPoints: PegPoints = {
-    player1: makePegPoints({
-        start: {bottom:0, left:0},
-        topArcRadius: columnGap * 5,
-        bottomArcRadius: columnGap * 3,
-    }),
 
-    player2: makePegPoints({
-        start: {bottom:0, left: columnGap},
-        topArcRadius: columnGap * 4,
-        bottomArcRadius: columnGap * 2,
-    }),
-};
+function makeBoundingBox(points: Position[]) {
 
-interface BoundingBox {
-    minBottom: number;
-    maxBottom: number;
-
-    minLeft: number;
-    maxLeft: number;
-};
-
-function makeBoundingBox() {
-    const allPoints = [...pegPoints.player1, ...pegPoints.player2];
-    
-    let minBottom = allPoints[0].bottom;
+    let minBottom = points[0].bottom;
     let maxBottom = minBottom;
 
-    let minLeft = allPoints[0].left;
+    let minLeft = points[0].left;
     let maxLeft = minLeft;
 
-    for(const pos of allPoints) {
+    for(const pos of points) {
         minBottom = Math.min(minBottom, pos.bottom);
         maxBottom = Math.max(maxBottom, pos.bottom);
 
@@ -164,4 +144,43 @@ function makeBoundingBox() {
     return {minBottom, maxBottom, minLeft, maxLeft};
 }
 
-export const boundingBox : BoundingBox = makeBoundingBox();
+// Add the cordinated in offset to each of the points in points.
+function offsetPoints(points: Position[], offset: Position) {
+    return points.map(pos => {
+        return {
+            bottom: pos.bottom + offset.bottom,
+            left: pos.left + offset.left,
+        };
+    })
+}
+
+const rawPegPoints: PegPoints = {
+    player1: makeRawPegPoints({
+        start: {bottom:0, left:0},
+        topArcRadius: columnGap * 5,
+        bottomArcRadius: columnGap * 3,
+    }),
+
+    player2: makeRawPegPoints({
+        start: {bottom:0, left: columnGap},
+        topArcRadius: columnGap * 4,
+        bottomArcRadius: columnGap * 2,
+    }),
+};
+
+const rawBoundingBox = makeBoundingBox(
+    [...rawPegPoints.player1, ...rawPegPoints.player2]
+);
+
+export const boardWidth = (rawBoundingBox.maxLeft - rawBoundingBox.minLeft) + radius;
+export const boardHeight = (rawBoundingBox.maxBottom - rawBoundingBox.minBottom) + radius;
+
+const offset = {
+    bottom: -rawBoundingBox.minBottom,
+    left: -rawBoundingBox.minLeft,
+};
+
+export const pegPoints: PegPoints = {
+    player1: offsetPoints(rawPegPoints.player1, offset),
+    player2: offsetPoints(rawPegPoints.player2, offset),
+}
