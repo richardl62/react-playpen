@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { SkunkLine, StartLine, EndLine } from "./marker-lines";
+import { MarkerLines } from "./marker-lines";
 import { boardHeight, boardWidth, pegPoints } from "./peg-points";
 import { boardPadding, holeRadius } from "./sizes";
 
@@ -57,8 +57,6 @@ export function ScoreBoard() {
 
     return <Board height={boardHeight} width={boardWidth}>
         {holes}
-        <StartLine/>
-        <SkunkLine/>
-        <EndLine/>
+        <MarkerLines/>
     </Board>;
 }
