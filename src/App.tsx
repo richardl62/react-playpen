@@ -1,10 +1,10 @@
 import React from 'react';
-import { ScoreBoard } from './score-board';
+import { Game } from './score-board';
 
 
 function App() {
 
-  return <ScoreBoard />
+  return <Game />
 }
 
 export default App;

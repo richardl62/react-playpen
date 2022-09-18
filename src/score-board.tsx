@@ -1,7 +1,9 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { MarkerLines } from "./marker-lines";
 import { boardHeight, boardWidth, pegPoints } from "./peg-points";
 import { boardPadding, holeRadius } from "./sizes";
+import { Position } from "./types";
 
 
 const Board = styled.div<{height: number, width: number}>`
@@ -63,17 +65,71 @@ const Peg = styled.div<{player1 : boolean}>`
     background: ${props => props.player1 ? "yellow" : "blue"};
 `;
 
-export function ScoreBoard() {
-    const allPoints = [...pegPoints.player1, ...pegPoints.player2];
+interface PlayerProps {
+    /** Called to check if there is a peg in the hole */
+    hasPeg: (index: number) => boolean;
 
-    const holes = allPoints.map((pos, index) => {
-        return <PegContainer key={index} bottom={pos.bottom} left={pos.left}>
-                {index % 9 === 0 ? <Peg player1={index % 2 === 1}/> : <Hole/>}
-            </PegContainer>;
+    /** Called when a peg/hole is clicked */
+    onClick: (index: number) => void;
+};
+
+
+function makeElements(pegPoints: Position[], props: PlayerProps, player1: boolean) {
+    return pegPoints.map((pos, index) => {
+        const key = `${index}-{player1}`;
+        return <PegContainer key={key} bottom={pos.bottom} left={pos.left}
+            onClick={()=>props.onClick(index)}
+        >
+             {props.hasPeg(index) ? <Peg player1={player1}/> : <Hole/>}
+        </PegContainer>;
     });
+}
+
+interface ScoreBoardProps {
+    player1: PlayerProps;
+    player2: PlayerProps;
+}
+
+function ScoreBoard(props: ScoreBoardProps) {
 
     return <Board height={boardHeight} width={boardWidth}>
-        {holes}
+        {makeElements(pegPoints.player1,props.player1, true)}
+        {makeElements(pegPoints.player2,props.player2, false)}
         <MarkerLines/>
     </Board>;
+}
+
+type Pegs = [number,number];
+function movePeg(pegs: Pegs, moveTo:number) : Pegs {
+    // You can't move onto an existing peg.
+    if(pegs.includes(moveTo)) {
+        return pegs;
+    }
+
+    if(moveTo > pegs[1]) {
+         // Standard move
+         return [pegs[1], moveTo];
+    } else if (moveTo > pegs[0]) {
+        return [pegs[0], moveTo];
+    } else {
+        return [moveTo, pegs[0]]
+    }
+}
+function usePlayerProps() {
+    const [pegs, setPegs] = useState<Pegs>([0,1]);
+
+ 
+    const playerProps : PlayerProps = {
+        hasPeg: index => pegs.includes(index),
+        onClick: index => setPegs(movePeg(pegs, index)),
+    };
+
+    return playerProps;
+}
+
+export function Game() {
+    const player1 = usePlayerProps();
+    const player2 = usePlayerProps();
+
+    return <ScoreBoard player1={player1} player2={player2} />;
 }
