@@ -1,14 +1,10 @@
 import styled from "styled-components";
-import { pegPoints, boardHeight, boardWidth } from "./peg-points";
+import { pegPoints, boardHeight, boardWidth, startLine, endLine, skunkLine } from "./peg-points";
 import { boardPadding, holeRadius } from "./sizes";
+import { HorizontalLine } from "./types";
 
-const BoardBoarder = styled.div`
-    display: inline-flex;
-    /* background: cornsilk; */
-    /* border: 2px solid black; */
-`;
 
-const InnerBoard = styled.div<{height: number, width: number}>`
+const Board = styled.div<{height: number, width: number}>`
     position: relative;
 
     height: ${props => props.height}px;
@@ -51,7 +47,17 @@ HoleProps, // What is consumed by .attrs()
     border: solid 2px black;
     background: cornsilk;
 `
+const Line = styled.div<{line: HorizontalLine}>`
+    display: block;
 
+    position: absolute;
+    bottom: ${props => props.line.start.bottom};
+    left: ${props => props.line.start.left};
+
+    height: 4px;
+    width: ${props => props.line.length};
+    background: black;
+`;
 export function ScoreBoard() {
     const allPoints = [...pegPoints.player1, ...pegPoints.player2];
 
@@ -59,7 +65,10 @@ export function ScoreBoard() {
         return <Hole key={index} bottom={pos.bottom} left={pos.left}/>
     });
 
-    return <BoardBoarder>
-        <InnerBoard height={boardHeight} width={boardWidth}>{holes}</InnerBoard>
-    </BoardBoarder>;
+    return <Board height={boardHeight} width={boardWidth}>
+        {holes}
+        <Line line={startLine} />
+        <Line line={skunkLine} />
+        <Line line={endLine} />
+    </Board>
 }

@@ -1,6 +1,6 @@
 import { makeRawPegPoints } from "./raw-peg-points";
 import { acrRadiusTop, columnGap, holeRadius } from "./sizes";
-import { Position } from "./types";
+import { HorizontalLine, Position } from "./types";
 
 interface PegPoints {
     player1: Position[];
@@ -66,3 +66,37 @@ export const pegPoints: PegPoints = {
     player1: offsetPoints(rawPegPoints.player1, offset),
     player2: offsetPoints(rawPegPoints.player2, offset),
 }
+
+function makeHorizontalLine(index: number) {
+    const average = (p1:Position, p2: Position) =>
+    {
+        return {
+            bottom: (p1.bottom + p2.bottom ) / 2,
+            left: (p1.left + p2.left ) / 2,
+        }
+    }
+
+
+    const p1a = pegPoints.player1[index];
+    const p1b = pegPoints.player1[index-1];
+
+    const p2a = pegPoints.player2[index];
+    const p2b = pegPoints.player2[index-1];
+
+    let start;
+    let length;
+    if(p1a.left < p2a.left) {
+        start = average(p1a, p1b);
+        length = p2a.left - p1a.left;
+    } else {
+        start = average(p2a, p2b);
+        length = p1a.left - p2a.left;
+    }
+    
+    console.log(start, length);
+    return {start, length};
+}
+
+export const startLine : HorizontalLine = makeHorizontalLine(2);
+export const skunkLine : HorizontalLine = makeHorizontalLine(92);
+export const endLine : HorizontalLine = makeHorizontalLine(122);
