@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { pegPoints, boardHeight, boardWidth, startLine, endLine, skunkLine } from "./peg-points";
+import { SkunkLine, StartLine, EndLine } from "./marker-lines";
+import { boardHeight, boardWidth, pegPoints } from "./peg-points";
 import { boardPadding, holeRadius } from "./sizes";
-import { HorizontalLine } from "./types";
 
 
 const Board = styled.div<{height: number, width: number}>`
@@ -47,17 +47,7 @@ HoleProps, // What is consumed by .attrs()
     border: solid 2px black;
     background: cornsilk;
 `
-const Line = styled.div<{line: HorizontalLine}>`
-    display: block;
 
-    position: absolute;
-    bottom: ${props => props.line.start.bottom};
-    left: ${props => props.line.start.left};
-
-    height: 4px;
-    width: ${props => props.line.length};
-    background: black;
-`;
 export function ScoreBoard() {
     const allPoints = [...pegPoints.player1, ...pegPoints.player2];
 
@@ -67,8 +57,8 @@ export function ScoreBoard() {
 
     return <Board height={boardHeight} width={boardWidth}>
         {holes}
-        <Line line={startLine} />
-        <Line line={skunkLine} />
-        <Line line={endLine} />
-    </Board>
+        <StartLine/>
+        <SkunkLine/>
+        <EndLine/>
+    </Board>;
 }
