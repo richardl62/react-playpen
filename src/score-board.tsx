@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { nPreStartPegs } from "./config";
 import { MarkerLines } from "./marker-lines";
 import { boardHeight, boardWidth, pegPoints } from "./peg-points";
 import { boardPadding, holeRadius } from "./sizes";
@@ -119,9 +120,10 @@ function usePlayerProps() {
     const [pegs, setPegs] = useState<Pegs>([0,1]);
 
  
-    const playerProps : PlayerProps = {
-        hasPeg: index => pegs.includes(index),
-        onClick: index => setPegs(movePeg(pegs, index)),
+    const playerProps = {
+        hasPeg: (index: number) => pegs.includes(index),
+        onClick: (index: number) => setPegs(movePeg(pegs, index)),
+        score: Math.max(pegs[1] - (nPreStartPegs-1), 0)
     };
 
     return playerProps;
@@ -131,5 +133,9 @@ export function Game() {
     const player1 = usePlayerProps();
     const player2 = usePlayerProps();
 
-    return <ScoreBoard player1={player1} player2={player2} />;
+    return <div>
+        <ScoreBoard player1={player1} player2={player2} />
+        <div>{`Player1: ${player1.score}`}</div>
+        <div>{`Player2: ${player2.score}`}</div>
+    </div>; 
 }
