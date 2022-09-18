@@ -11,8 +11,6 @@ export const rowGap = {
 
 export const boardPadding = 10;
 
-// Kludge: It would be better to define just innerArcRadiusTop here,
-// and to then compute innerArcRadiusBottom to ensure that the inner
-// 'meta' column is central.
-export const innerArcRadiusTop = holeRadius * 5;
-export const innerArcRadiusBottom = holeRadius * 2;
+// The radius of the middle of the top arc.
+// (The radius of the middle of the bottom arc is half this value.) 
+export const acrRadiusTop = holeRadius * 5;
