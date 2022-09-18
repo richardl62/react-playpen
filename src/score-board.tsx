@@ -29,30 +29,47 @@ a warnings like
     Over 200 classes were generated for component styled.div with the id of "sc-crXcEl".
     Consider using the attrs method ...
 */
-const Hole = styled.div.attrs<
+const PegContainer = styled.div.attrs<
 HoleProps, // What is consumed by .attrs()
     {style: any} // What comes out of .attrs(). Use of 'any' is a kludge. 
 >((props) => {
     return {style: {
+        position: "absolute",
         bottom: props.bottom,
         left: props.left,
     }}
 })<HoleProps>`
+
+    height: ${holeRadius}px;
+    width: ${holeRadius}px;
+`
+
+const Hole = styled.div`
     height: ${holeRadius}px;
     width: ${holeRadius}px;
     border-radius: 50%;
 
-    position: absolute;
+
     box-sizing: border-box;
     border: solid 2px black;
     background: cornsilk;
 `
+const Peg = styled.div<{player1 : boolean}>`
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px black;
+    border-radius: 50%;
+    background: ${props => props.player1 ? "yellow" : "blue"};
+`;
 
 export function ScoreBoard() {
     const allPoints = [...pegPoints.player1, ...pegPoints.player2];
 
     const holes = allPoints.map((pos, index) => {
-        return <Hole key={index} bottom={pos.bottom} left={pos.left}/>
+        return <PegContainer key={index} bottom={pos.bottom} left={pos.left}>
+                {index % 9 === 0 ? <Peg player1={index % 2 === 1}/> : <Hole/>}
+            </PegContainer>;
     });
 
     return <Board height={boardHeight} width={boardWidth}>
