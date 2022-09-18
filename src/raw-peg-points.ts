@@ -1,3 +1,5 @@
+import { nPostEndPegs, nPreStartPegs, nInPlayPegs } from "./config";
+import { sAssert } from "./s-assert";
 import { rowGap } from "./sizes";
 import { Position } from "./types";
 
@@ -92,10 +94,11 @@ export function makeRawPegPoints(params: {
     };
 
     // Starting peg points
+    sAssert(nPreStartPegs === 2); //kludge
     addPoint(start);
     addOffsetPoint(rowGap.standard);
 
-    // Main 120 peg points
+    // 'In play' pegs
     addColumn(35, "up");
 
     addTopArc();
@@ -107,11 +110,11 @@ export function makeRawPegPoints(params: {
     addColumn(35, "up");
 
     // Finish point
+    sAssert(nPostEndPegs === 1); //kludge
     addOffsetPoint(rowGap.fifthRow);
 
     // Playing points
-    if (points.length !== 123) {
-        console.warn("Did not find expected number of peg points");
-    }
+    sAssert(points.length === nPreStartPegs + nInPlayPegs + nPostEndPegs); 
+
     return points;
 }
