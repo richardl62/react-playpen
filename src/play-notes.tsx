@@ -1,35 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const AudioContext = window.AudioContext;
 
 export const PlayNotes = () => {
-  const [audioContext, setAudioContext] = useState<AudioContext|null>(null);
+  const audioContext = new AudioContext();
+
   const [oscillatorNode, setOscillatorNode] = useState<OscillatorNode|null>(null);
-  const [gainNode, setGainNode] = useState<GainNode|null>(null);
-
-  useEffect(() => {
-    const audioContext = new AudioContext();
-    const oscillatorNode = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-
-    oscillatorNode.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-
-    setAudioContext(audioContext);
-    setOscillatorNode(oscillatorNode);
-    setGainNode(gainNode);
-  }, []);
 
   const playNote = (frequency: number) => {
-    if (audioContext && oscillatorNode && gainNode) {
-      oscillatorNode.frequency.value = frequency;
-      oscillatorNode.start();
+
+    const localOscillatorNode = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    localOscillatorNode.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    localOscillatorNode.frequency.value = frequency;
+    localOscillatorNode.start();
+
+    if(oscillatorNode) {
+      oscillatorNode.stop();
     }
+    setOscillatorNode(localOscillatorNode);
   };
 
   const stopNote = () => {
     if (oscillatorNode) {
       oscillatorNode.stop();
+      setOscillatorNode(null);
     }
   };
 
